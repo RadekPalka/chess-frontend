@@ -7,10 +7,18 @@ type Props = {
 	userName: string;
 	rooms: Room[];
 	socket: Socket<DefaultEventsMap, DefaultEventsMap>;
+	setChosenRoomName: React.Dispatch<React.SetStateAction<string>>;
 };
-export const RoomList: React.FC<Props> = ({ userName, rooms, socket }) => {
+export const RoomList: React.FC<Props> = ({
+	userName,
+	rooms,
+	socket,
+	setChosenRoomName,
+}) => {
 	const joinRoom = (roomName: string) => {
 		socket.emit('joinRoom', roomName, userName);
+		sessionStorage.setItem('room-name', roomName);
+		setChosenRoomName(roomName);
 	};
 
 	const isRoomFull = (numberOfPlayers: number, roomName: string) => {
@@ -20,12 +28,13 @@ export const RoomList: React.FC<Props> = ({ userName, rooms, socket }) => {
 			<p>Room is full</p>
 		);
 	};
+	console.log(rooms);
 	return (
 		<>
 			{rooms.length === 0 && <p>Waiting for connection</p>}
 			<ul>
 				{rooms.map((room) => (
-					<li>
+					<li key={room.name}>
 						{room.name}: {room.numberOfPlayers}{' '}
 						{isRoomFull(room.numberOfPlayers, room.name)}
 					</li>

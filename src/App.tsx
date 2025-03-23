@@ -3,6 +3,7 @@ import './App.css';
 import { RoomList } from './components/RoomList';
 import { Form } from './components/Form';
 import { io } from 'socket.io-client';
+import { GameRoom } from './components/GameRoom';
 const socket = io('http://localhost:3000');
 export type Room = {
 	name: string;
@@ -12,6 +13,7 @@ export type Room = {
 function App() {
 	const [userName, setUserName] = useState('');
 	const [rooms, setRooms] = useState<Room[]>([]);
+	const [chosenRoomName, setChosenRoomName] = useState('');
 
 	const createUserName = (inputText: string) => {
 		if (inputText.length < 3) return;
@@ -36,8 +38,15 @@ function App() {
 		<>
 			{userName === '' ? (
 				<Form createUserName={createUserName} />
+			) : chosenRoomName ? (
+				<GameRoom />
 			) : (
-				<RoomList userName={userName} rooms={rooms} socket={socket} />
+				<RoomList
+					userName={userName}
+					rooms={rooms}
+					socket={socket}
+					setChosenRoomName={setChosenRoomName}
+				/>
 			)}
 		</>
 	);
