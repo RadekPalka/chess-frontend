@@ -39,7 +39,7 @@ function App() {
 			{userName === '' ? (
 				<Form createUserName={createUserName} />
 			) : chosenRoomName ? (
-				<GameRoom />
+				<GameRoom roomName={chosenRoomName} socket={socket} userName={userName} />
 			) : (
 				<RoomList
 					userName={userName}
